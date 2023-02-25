@@ -9,9 +9,11 @@
     },
     "authors": [
         {
-            "name": "Bubby Colditz",
-            "email": "bubbycolditz@gmail.com"
+            "name": "Brian T. Colditz",
+            "email": "brian@bcolditz.tech"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=8.0.0"
+    }
 }
