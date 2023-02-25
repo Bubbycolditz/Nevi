@@ -11,12 +11,10 @@
 
     namespace Bubbycolditz\Nevi;
 
-    require_once(__DIR__ . "/config.php");
-
-    require_once "Database.php";
-    require_once "Auth.php";
-    require_once "User.php";
-    require_once "Log.php";
+    require_once("Database.php");
+    require_once("Auth.php");
+    require_once("User.php");
+    require_once("Log.php");
 
     class Nevi {
 

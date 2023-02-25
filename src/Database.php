@@ -12,9 +12,9 @@
 
             try {
 
-                $this->pdo = new PDO("mysql:host=$host;dbname=$dbName", $username, $password);
+                $this->pdo = new \PDO("mysql:host=$host;dbname=$dbName", $username, $password);
 
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
 
                 die("Could not connect to the database. Please check your configuration. The following error has occured:<br><br>$e");
 
