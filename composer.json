@@ -1,0 +1,17 @@
+{
+    "name": "bubbycolditz/nevi",
+    "description": "PHP Library used for basic PHP functions, but simplified.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Bubbycolditz\\Nevi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bubby Colditz",
+            "email": "bubbycolditz@gmail.com"
+        }
+    ],
+    "require": {}
+}
