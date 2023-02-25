@@ -188,7 +188,7 @@
                 default => "$actionNew $page <b>$customMessage</b>"
             };
 
-            $db->pdoInsertQuery("logs", ['dateTime', 'userID', 'userIP', 'userOS', 'userBrowser', 'page', 'actionType', 'activityStatus', 'description'], ["$fullDateTime", "$user[id]", Log::get_ip(), Log::get_os(), Log::get_browser(), "$page", "$action", "$status", "$description"]);
+            return $db->pdoInsertQuery("logs", ['dateTime', 'userID', 'userIP', 'userOS', 'userBrowser', 'page', 'actionType', 'activityStatus', 'description'], ["$fullDateTime", "$user[id]", Log::get_ip(), Log::get_os(), Log::get_browser(), "$page", "$action", "$status", "$description"]);
 
         }
     }
