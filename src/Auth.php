@@ -71,7 +71,7 @@
             }
         }
 
-        public function logout() {
+        public function logout($location) {
 
             session_destroy();
 
@@ -81,7 +81,7 @@
 
             }
 
-            header('Location: ../../login'); exit;
+            header("Location: $location"); exit;
 
         }
     }
