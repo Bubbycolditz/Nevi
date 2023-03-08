@@ -633,7 +633,7 @@
                 default => "$actionNew $page <b>$customMessage</b>"
             };
 
-            return $this->pdoInsertQuery("logs", ['dateTime', 'userID', 'userIP', 'userOS', 'userBrowser', 'page', 'actionType', 'activityStatus', 'description'], ["$fullDateTime", "$user[id]", Log::get_ip(), Log::get_os(), Log::get_browser(), "$page", "$action", "$status", "$description"]);
+            return $this->pdoInsertQuery("logs", ['dateTime', 'userID', 'userIP', 'userOS', 'userBrowser', 'page', 'actionType', 'activityStatus', 'description'], ["$fullDateTime", "$user[id]", Nevi::get_ip(), Nevi::get_os(), Nevi::get_browser(), "$page", "$action", "$status", "$description"]);
 
         }
 
