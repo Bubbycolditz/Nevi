@@ -11,6 +11,11 @@
 
     namespace Bubbycolditz\Nevi;
 
+    use Exception;
+    use JetBrains\PhpStorm\NoReturn;
+    use PDO;
+    use PDOException;
+
     class Nevi {
 
         private $pdo;
@@ -19,9 +24,9 @@
 
             try {
 
-                $this->pdo = new \PDO("mysql:host=$host;dbname=$dbName", $username, $password);
+                $this->pdo = new PDO("mysql:host=$host;dbname=$dbName", $username, $password);
 
-            } catch (\PDOException $e) {
+            } catch (PDOException $e) {
 
                 die("Could not connect to the database. Please check your configuration. The following error has occured:<br><br>$e");
 
@@ -35,10 +40,10 @@
          * @param string $table The table wanting to select from.
          * @param string $selector The value(s) to grab from the table.
          * @param string $expression The expression statement to grab values from the table.
-         * @return array The array of values that satisfied the given expression from the table.
+         * @return mixed The array of values that satisfied the given expression from the table.
 
          */
-        public function pdoQuery($table, $selector, $expression){
+        public function pdoQuery(string $table, string $selector, string $expression): mixed {
 
             $stmt = $this->pdo->prepare("SELECT $selector FROM $table WHERE $expression");
             $stmt->execute();
@@ -49,7 +54,6 @@
         /**
 
          * Creates a MySQL query with the given expression returning an array
-
          * @param string $table The table wanting to select from.
          * @param string $selector The value(s) to grab from the table.
          * @param string $expression The expression statement to grab values from the table.
@@ -58,7 +62,7 @@
          * @return array The array of values that satisfied the given expression from the table stored into itself with the provided indexVariable and indexAssign.
 
          */
-        public function pdoArrayQuery($table, $selector, $expression, $indexVariable, $indexAssign){
+        public function pdoArrayQuery(string $table, string $selector, string $expression, string $indexVariable, string $indexAssign): array {
 
             $array = [];
 
@@ -77,15 +81,14 @@
         /**
 
          * Creates a MySQL query with the given expression returning an array
-
          * @param string $table The table wanting to fetch data from.
          * @param string $selector The value(s) to grab from the table.
-         * @param string $expression The expression statement to grab values from the table.
-         * @param string $type The type of equation to be used. [**table**, **combo**]
+         * @param bool|string $expression The expression statement to grab values from the table.
+         * @param bool|string $type The type of equation to be used. [**table**, **combo**]
          * @return array The array of values that satisfied the given expression from the table.
 
          */
-        public function pdoWhileQuery($table, $selector, $expression = false, $type = false){
+        public function pdoWhileQuery(string $table, string $selector, bool|string $expression = false, bool|string $type = false): array {
 
             if($type == "table"){
 
@@ -105,14 +108,13 @@
         /**
 
          * Inserts data using a MySQL query
-
          * @param string $table The table wanting to select from.
          * @param array $columns The columns that want to be updated.
          * @param array $values The values that want to be assigned to the columns.
-         * @return boolean The value of whether the values have successfully been inserted into the given table and columns.
+         * @return bool The value of whether the values have successfully been inserted into the given table and columns.
 
          */
-        public function pdoInsertQuery($table, $columns, $values) {
+        public function pdoInsertQuery(string $table, array $columns, array $values): bool {
 
             $cols = implode(',', $columns);
             $placeholders = implode(',', array_fill(0, count($columns), '?'));
@@ -131,14 +133,13 @@
         /**
 
          * Selects the total MySQL Database values with the given expression
-
          * @param string $table The table wanting to select from.
          * @param string $selector The value(s) to grab from the table.
          * @param string $expression The expression statement to grab values from the table.
          * @return int The total rows that satisfies the given expression.
 
          */
-        public function pdoNumRows($table, $selector, $expression){
+        public function pdoNumRows(string $table, string $selector, string $expression): int {
 
             $stmt = $this->pdo->prepare("SELECT $selector FROM $table WHERE $expression");
             $stmt->execute();
@@ -149,15 +150,14 @@
         /**
 
          * Updates data using a MySQL query with the given expression
-
          * @param string $table The table wanting to select from.
          * @param array $columns The columns that want to be updated.
          * @param array $values The values that want to be assigned to the columns.
          * @param string $expression The expression statement to update with the given columns and table.
-         * @return boolean The value of whether the values have successfully been updated into the given table and columns.
+         * @return bool The value of whether the values have successfully been updated into the given table and columns.
 
          */
-        public function pdoUpdate($table, $columns, $values, $expression){
+        public function pdoUpdate(string $table, array $columns, array $values, string $expression): bool {
 
             $assignments = [];
 
@@ -184,13 +184,13 @@
         /**
 
          * Deletes data using a MySQL query with the given expression
-
          * @param string $table The table wanting to delete.
          * @param string $expression The expression statement to delete with the given table.
-         * @return boolean The value of whether the row of data have successfully been deleted with the given table and expression.
+         * @return bool The value of whether the row of data have successfully been deleted with the given table and expression.
 
          */
-        public function pdoDelete($table, $expression){
+        public function pdoDelete(string $table, string $expression): bool
+        {
 
             $stmt = $this->pdo->prepare("DELETE FROM $table WHERE $expression");
             return $stmt->execute();
@@ -200,16 +200,14 @@
         /**
 
          * Log's a user in.
-
-         *
          * @param string $username The username of the user.
          * @param string $password The password of the user.
-         * @param boolean $remember Whether "Remember Me" should be enabled for the user upon logging in.
-         *
-         * @return boolean The value of whether the user has successfully logged in.
+         * @param bool $remember Whether "Remember Me" should be enabled for the user upon logging in.
+         * @return bool The value of whether the user has successfully logged in.
+         * @throws Exception
 
          */
-        public function login($username, $password, $remember = false){
+        public function login(string $username, string $password, bool $remember = false): bool {
 
             if($user = $this->pdoQuery("users", "*", "username = '$username'")){
 
@@ -238,12 +236,12 @@
         /**
 
          * Check's if a user is logged in.
-
          * @param string $verifyLocation The file location if the user has MFA enabled.
          * @param string $logoutLocation The file location if the user has failed the login check.
+         * @return bool The value of whether the user is currently logged in or not.
 
          */
-        public function is_logged_in($verifyLocation, $logoutLocation){
+        public function is_logged_in(string $verifyLocation, string $logoutLocation): bool {
 
             if(isset($_COOKIE['remember_me'])){
 
@@ -278,12 +276,13 @@
         /**
 
          * Log's a user out.
-
          * @param string $logoutLocation The file location of the logout file.
+         * @return void
 
          */
-        public function logout($logoutLocation) {
+        #[NoReturn] public function logout(string $logoutLocation): void {
 
+            session_start();
             session_destroy();
 
             if(isset($_COOKIE['remember_me'])){
@@ -299,13 +298,11 @@
         /**
 
          * Grab's the user info
-
          * @param string $userID The ID of the user.
-         *
-         * @return null
+         * @return mixed
 
          */
-        public function get_user_info($userID){
+        public function get_user_info(string $userID): mixed {
 
             return $this->pdoQuery("users", "*", "id = '$userID'");
 
@@ -314,13 +311,11 @@
         /**
 
          * Grab's the total registered events from the user.
-
          * @param string $userID The ID of the user.
-         *
          * @return int The value of total registered events.
 
          */
-        public function get_total_registered_events($userID){
+        public function get_total_registered_events(string $userID): int {
 
             global $db, $unixFullDate, $unixFullDateTime;
 
@@ -404,14 +399,13 @@
         /**
 
          * Start a password recovery by the user
-
          * @param string $userID The ID of the user.
          * @param string $passwordRecoveryEmailLocation The email file location for password recovery.
-         *
-         * @return null
+         * @return string
+         * @throws Exception
 
          */
-        public function initiate_password_recovery($userID, $passwordRecoveryEmailLocation){
+        public function initiate_password_recovery(string $userID, string $passwordRecoveryEmailLocation): string {
 
             global $db, $mail, $siteNameShort, $siteNameFull, $siteURL, $log;
 
@@ -441,23 +435,21 @@
                 $log->logAction("settings", "email", "succeeded", "Send Password Reset Email: \"$user[firstName] $user[lastName]\"");
                 return $log->errorMessage("warning", "A password recovery link has been sent!");
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
 
-                $log->logAction("settings", "email", "failed", "Couldn't send Password Reset Email: \"$user[firstName] $user[lastName]\"");
-                return $log->errorMessage("danger", "This message could not be sent for some reason. Here is the exact error: <b>{$mail->ErrorInfo}</b>");
+                $log->logAction("settings", "email", "failed", "Couldn't send Password Reset Email: \"$user[firstName] $user[lastName]\" --> [$e]");
+                return $log->errorMessage("danger", "This message could not be sent for some reason. Here is the exact error: <b>$mail->ErrorInfo</b>");
 
             }
         }
 
-        private static function get_user_agent(){
+        private static function get_user_agent(): mixed {
 
             return $_SERVER['HTTP_USER_AGENT'];
 
         }
 
-        public static function get_ip(){
-
-            $mainIp = "";
+        public static function get_ip(): string|array|bool {
 
             if(getenv('HTTP_CLIENT_IP')){
 
@@ -493,7 +485,7 @@
 
         }
 
-        public static function get_os(){
+        public static function get_os(): string {
 
             $user_agent = self::get_user_agent();
             $os_platform = "Unknown OS Platform";
@@ -534,7 +526,7 @@
             return $os_platform;
         }
 
-        public static function get_browser(){
+        public static function get_browser(): string {
 
             $user_agent = self::get_user_agent();
 
@@ -571,16 +563,15 @@
         /**
 
          * Prints an error message
-
-         * @param string $errorType The type of error [**success**, **warning**, **danger**]
-         * @param string $message The message wanting to be dispalyed
-         * @param bool $dismissible Toggle dismissible alert boxes
-         * @return string The entire alert dialog box onto the page
+         * @param string $errorType The type of error. [**success**, **warning**, **danger**]
+         * @param string $message The message wanting to be displayed.
+         * @param bool $dismissible Toggle dismissible alert boxes.
+         * @return string The entire alert dialog box onto the page.
 
          */
-        public function errorMessage($errorType, $message, $dismissible = true){
+        public function errorMessage(string $errorType, string $message, bool $dismissible = true): string {
 
-            return $errorType = match($errorType){
+            return match($errorType){
                 "success" => "<div class='alert alert-success ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-check fa-fw'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
                 "warning" => "<div class='alert alert-warning ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-exclamation'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
                 "danger" => "<div class='alert alert-danger ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-xmark'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
@@ -591,15 +582,14 @@
         /**
 
          * Logs the user's actions
-
          * @param string $page The page the user is currently at
          * @param string $action The type of action the user is completing
          * @param string $status The status of the log [**succeeded**, **failed**]
-         * @param string $customMessage The specific value that is shown along with the action and page
-         * @return null
+         * @param bool|string $customMessage The specific value that is shown along with the action and page
+         * @return ?bool
 
          */
-        public function logAction($page, $action, $status, $customMessage = false){
+        public function logAction(string $page, string $action, string $status, bool|string $customMessage = false): ?bool {
 
             global $fullDateTime, $user;
 
@@ -641,7 +631,7 @@
 
             $time_difference = time() - $time;
 
-            if($time_difference < 1){ return "less than 1 second ago"; }
+            if($time_difference < 1){ return ""; }
 
             $condition = array(
                 12 * 30 * 24 * 60 * 60  =>  'year',
@@ -657,12 +647,25 @@
 
                 $d = $time_difference / $secs;
 
-                if( $d >= 1 ) {
+                if ($d >= 1) {
 
-                    $t = round( $d );
-                    return '' . $t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago';
+                    $t = round($d);
+                    return '' . $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
 
                 }
             }
+        }
+
+        /**
+
+         * Format the user's phone number
+         * @param string $phoneNumber The phone number from the user
+         * @return string The user's phone number in the format: "(xxx) xxx-xxxx"
+
+         */
+        function formatPhoneNumber(string $phoneNumber): string {
+
+            return sprintf("(%s) %s-%s", substr($phoneNumber, 0, 3), substr($phoneNumber, 3, 3), substr($phoneNumber, 6, 9));
+
         }
     }
