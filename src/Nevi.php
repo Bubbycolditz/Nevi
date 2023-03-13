@@ -317,11 +317,11 @@
          */
         public function get_total_registered_events(string $userID): int {
 
-            global $db, $unixFullDate, $unixFullDateTime;
+            global $unixFullDate, $unixFullDateTime;
 
             $totalEvents = 0;
 
-            foreach($db->pdoWhileQuery("events", "*", "UNIX_TIMESTAMP(date) >= '$unixFullDate'") as $rows){
+            foreach($this->pdoWhileQuery("events", "*", "UNIX_TIMESTAMP(date) >= '$unixFullDate'") as $rows){
 
                 $eventID = $rows['id'];
                 $serviceID = $rows['serviceID'];
@@ -332,7 +332,7 @@
 
                 if($serviceID != ""){
 
-                    if($rows = $db->pdoQuery("services", "*", "id = '$serviceID'")){
+                    if($rows = $this->pdoQuery("services", "*", "id = '$serviceID'")){
 
                         $serviceStartTime = $rows['startTime'];
                         $serviceEndTime = $rows['endTime'];
@@ -376,7 +376,7 @@
                     }
                 }
 
-                if($rows = $db->pdoQuery("schedule", "*", "userID = '$userID' AND eventID = '$eventID'")){
+                if($rows = $this->pdoQuery("schedule", "*", "userID = '$userID' AND eventID = '$eventID'")){
 
                     $attendanceStatus = $rows['attendanceStatus'];
 
