@@ -407,7 +407,7 @@
          */
         public function initiate_password_recovery(string $userID, string $passwordRecoveryEmailLocation): string {
 
-            global $db, $mail, $siteNameShort, $siteNameFull, $siteURL, $log;
+            global $mail, $siteNameShort, $siteNameFull, $siteURL;
 
             $recoveryToken = bin2hex(random_bytes(32));
             $user = $this->get_user_info($userID);
@@ -418,7 +418,7 @@
 
             $userFullName = "$userFirstName $userLastName";
 
-            $db->pdoUpdate("users", ['token'], ["$recoveryToken"], "email = '$userEmail'");
+            $this->pdoUpdate("users", ['token'], ["$recoveryToken"], "email = '$userEmail'");
 
             try {
 
@@ -432,13 +432,13 @@
 
                 $mail->send();
 
-                $log->logAction("settings", "email", "succeeded", "Send Password Reset Email: \"$user[firstName] $user[lastName]\"");
-                return $log->errorMessage("warning", "A password recovery link has been sent!");
+                $this->logAction("settings", "email", "succeeded", "Send Password Reset Email: \"$user[firstName] $user[lastName]\"");
+                return $this->errorMessage("warning", "A password recovery link has been sent!");
 
             } catch (Exception $e) {
 
-                $log->logAction("settings", "email", "failed", "Couldn't send Password Reset Email: \"$user[firstName] $user[lastName]\" --> [$e]");
-                return $log->errorMessage("danger", "This message could not be sent for some reason. Here is the exact error: <b>$mail->ErrorInfo</b>");
+                $this->logAction("settings", "email", "failed", "Couldn't send Password Reset Email: \"$user[firstName] $user[lastName]\" --> [$e]");
+                return $this->errorMessage("danger", "This message could not be sent for some reason. Here is the exact error: <b>$mail->ErrorInfo</b>");
 
             }
         }
@@ -631,7 +631,7 @@
 
             $time_difference = time() - $time;
 
-            if($time_difference < 1){ return ""; }
+            if($time_difference < 1){ return "less than 1 second ago"; }
 
             $condition = array(
                 12 * 30 * 24 * 60 * 60  =>  'year',
