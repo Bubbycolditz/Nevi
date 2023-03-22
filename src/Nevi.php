@@ -189,8 +189,7 @@
          * @return bool The value of whether the row of data have successfully been deleted with the given table and expression.
 
          */
-        public function pdoDelete(string $table, string $expression): bool
-        {
+        public function pdoDelete(string $table, string $expression): bool {
 
             $stmt = $this->pdo->prepare("DELETE FROM $table WHERE $expression");
             return $stmt->execute();
@@ -592,21 +591,6 @@
         public function logAction(string $page, string $action, string $status, bool|string $customMessage = false): ?bool {
 
             global $fullDateTime, $user;
-
-            $page = match($page){
-                "categories" => "category",
-                "services" => "service",
-                "events", "viewInfo" => "event",
-                "users" => "user",
-                "teams" => "team",
-                "worshippers" => "worshipper",
-                "login" => "login",
-                "logout" => "logout",
-                "speakers" => "speaker",
-                "permissions" => "permissions",
-                "roles" => "roles",
-                "settings" => "settings"
-            };
 
             $actionNew = match($action){
                 "create" => "Create",
