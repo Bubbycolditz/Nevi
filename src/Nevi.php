@@ -206,7 +206,7 @@
          * @throws Exception
 
          */
-        public function login(string $username, string $password, bool $remember = false): bool {
+        public function login(string $username, string $password): bool {
 
             if($user = $this->pdoQuery("users", "*", "username = '$username'")){
 
@@ -214,14 +214,6 @@
 
                     $_SESSION['logged_in'] = true;
                     $_SESSION['user_id'] = $user['id'];
-
-                    if($remember){
-
-                        $token = bin2hex(random_bytes(16));
-                        $this->pdoUpdate("users", ['remember_token'], ["$token"], "id = '$user[id]'");
-                        setcookie('remember_me', $token, time() + (10 * 365 * 24 * 60 * 60));
-
-                    }
 
                     return true;
 
