@@ -201,7 +201,6 @@
          * Log's a user in.
          * @param string $username The username of the user.
          * @param string $password The password of the user.
-         * @param bool $remember Whether "Remember Me" should be enabled for the user upon logging in.
          * @return bool The value of whether the user has successfully logged in.
          * @throws Exception
 
@@ -234,18 +233,6 @@
          */
         public function is_logged_in(string $verifyLocation, string $logoutLocation): bool {
 
-            if(isset($_COOKIE['remember_me'])){
-
-                if($user = $this->pdoQuery("users", "*", "remember_token = '$_COOKIE[remember_me]'")){
-
-                    $_SESSION['logged_in'] = true;
-                    $_SESSION['user_id'] = $user['id'];
-
-                    return true;
-
-                }
-            }
-
             if($_SESSION['logged_in']){
 
                 if($_SESSION['mfa_required']){
@@ -275,12 +262,6 @@
 
             session_start();
             session_destroy();
-
-            if(isset($_COOKIE['remember_me'])){
-
-                setcookie('remember_me', '', time() - 3600);
-
-            }
 
             header("Location: $logoutLocation"); exit;
 
