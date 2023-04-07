@@ -250,9 +250,9 @@
          */
         public function is_logged_in(string $verifyLocation, string $logoutLocation, bool $allowSession): bool {
 
-            if($_SESSION['logged_in']){
+            if(@$_SESSION['logged_in']){
 
-                if($_SESSION['mfa_required']){
+                if(@$_SESSION['mfa_required']){
 
                     header("Location: $verifyLocation"); exit;
 
