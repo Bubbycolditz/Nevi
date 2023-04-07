@@ -225,13 +225,30 @@
 
         /**
 
+         * Log's a user out.
+         * @param string $logoutLocation The file location of the logout file.
+         * @return void
+
+         */
+        #[NoReturn] public function logout(string $logoutLocation): void {
+
+            session_start();
+            session_destroy();
+
+            header("Location: $logoutLocation"); exit;
+
+        }
+
+        /**
+
          * Check's if a user is logged in.
          * @param string $verifyLocation The file location if the user has MFA enabled.
          * @param string $logoutLocation The file location if the user has failed the login check.
+         * @param bool $allowSession Allow the user to continue their session without redirecting.
          * @return bool The value of whether the user is currently logged in or not.
 
          */
-        public function is_logged_in(string $verifyLocation, string $logoutLocation): bool {
+        public function is_logged_in(string $verifyLocation, string $logoutLocation, bool $allowSession): bool {
 
             if($_SESSION['logged_in']){
 
@@ -246,26 +263,20 @@
                 }
             } else {
 
-                header("Location: $logoutLocation"); exit;
+                if($allowSession == true){
+
+                    return true;
+
+                } else {
+
+                    $this->logout($logoutLocation);
+
+                }
 
             }
         }
 
-        /**
-
-         * Log's a user out.
-         * @param string $logoutLocation The file location of the logout file.
-         * @return void
-
-         */
-        #[NoReturn] public function logout(string $logoutLocation): void {
-
-            session_start();
-            session_destroy();
-
-            header("Location: $logoutLocation"); exit;
-
-        }
+        
 
         /**
 
