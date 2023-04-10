@@ -201,13 +201,14 @@
          * Log's a user in.
          * @param string $username The username of the user.
          * @param string $password The password of the user.
+         * @param string $table The table from where the user is located.
          * @return bool The value of whether the user has successfully logged in.
          * @throws Exception
 
          */
-        public function login(string $username, string $password): bool {
+        public function login(string $username, string $password, string $table): bool {
 
-            if($user = $this->pdoQuery("users", "*", "username = '$username'")){
+            if($user = $this->pdoQuery("$table", "*", "username = '$username'")){
 
                 if(password_verify($password, $user['password'])){
 
