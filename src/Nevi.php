@@ -199,28 +199,15 @@
         /**
 
          * Log's a user in.
-         * @param string $username The username of the user.
-         * @param string $password The password of the user.
-         * @param string $table The table from where the user is located.
+         * @param string $inputPassword The password from the input form.
+         * @param string $verifyPassword The password that is in the database.
          * @return bool The value of whether the user has successfully logged in.
          * @throws Exception
 
          */
-        public function login(string $username, string $password, string $table): bool {
+        public function verifyPassword(string $inputPassword, string $verifyPassword): bool {
 
-            if($user = $this->pdoQuery("$table", "*", "username = '$username'")){
-
-                if(password_verify($password, $user['password'])){
-
-                    $_SESSION['logged_in'] = true;
-                    $_SESSION['user_id'] = $user['id'];
-
-                    return true;
-
-                }
-            }
-
-            return false;
+            return password_verify($inputPassword, $verifyPassword) ? true : false;
 
         }
 
