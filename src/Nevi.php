@@ -308,6 +308,9 @@
                         $serviceStartTime = $rows['startTime'];
                         $serviceEndTime = $rows['endTime'];
 
+                        $serviceStartTime = ($serviceStartTime == "" ?: "00:00");
+                        $serviceEndTime = ($serviceEndTime == "" ?: "00:00");
+
                     }
 
                     if($endTime != ""){
