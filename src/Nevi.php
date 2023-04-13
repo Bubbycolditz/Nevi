@@ -624,7 +624,7 @@
          */
         function randomGreeting($name) {
 
-            match(random_int(1, 55)){
+            return match(random_int(1, 55)){
                 1 => "Welcome back <b>$name</b>!",
                 2 => "What's up <b>$name</b>?",
                 3 => "Greetings <b>$name</b>!",
