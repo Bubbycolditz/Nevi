@@ -617,6 +617,75 @@
 
         /**
 
+         * Prints a random greeting message
+         * @param string $name The name of the user wanting to great
+         * @return string The greeting message randomly selected
+
+         */
+        function randomGreeting($name) {
+
+            match(random_int(1, 55)){
+                1 => "Welcome back <b>$name</b>!",
+                2 => "What's up <b>$name</b>?",
+                3 => "Greetings <b>$name</b>!",
+                4 => "¡Hola <b>$name</b>!",
+                5 => "How's it going <b>$name</b>?",
+                6 => "Hello <b>$name</b>!",
+                7 => "Howdy <b>$name</b>!",
+                8 => "How are ya <b>$name</b>?",
+                9 => "It's good to see you <b>$name</b>!",
+                10 => "What's new <b>$name</b>?",
+                11 => "How are things going <b>$name</b>?",
+                12 => "Hey <b>$name</b>!",
+                13 => "<b>$name</b>, your back!",
+                14 => "How's it coming along <b>$name</b>?",
+                15 => "Hope things are going great for you <b>$name</b>!",
+                16 => "Are things going well <b>$name</b>?",
+                17 => "Welcome <b>$name</b>!",
+                18 => "It's nice to see you <b>$name</b>!",
+                19 => "Hi <b>$name</b>!",
+                20 => "It's been a while <b>$name</b>!",
+                21 => "How are you doing <b>$name</b>?",
+                22 => "How is everything <b>$name</b>?",
+                23 => "How have you been <b>$name</b>?",
+                24 => "Welcome aboard <b>$name</b>!",
+                25 => "Thanks for coming back <b>$name</b>!",
+                26 => "How are you <b>$name</b>?",
+                27 => "Are things going great <b>$name</b>?",
+                28 => "What's going on <b>$name</b>?",
+                29 => "Ahoy <b>$name</b>!",
+                30 => "Knock knock. (who's there?) It's <b>$name</b>!",
+                31 => "Aloha <b>$name</b>!",
+                32 => "Hold the phone, <b>$name</b> just entered the house!",
+                33 => "Wassup <b>$name</b>?",
+                34 => "Why did the chicken cross the road? To go see <b>$name</b> on the other side!",
+                35 => "<span style='background-image: linear-gradient(to right,red,orange,green,blue,indigo,violet);-webkit-background-clip: text;-webkit-text-fill-color: transparent;'>You have a ".((1/55) * 100)."% chance to get this special message. Good one <b>$name</b></span>!",
+                36 => "It's great to see you back <b>$name</b>!",
+                37 => "What's new <b>$name</b>?",
+                38 => "Everyone look! <b>$name</b> is here to save the day!",
+                39 => "Glad to see you <b>$name</b>!",
+                40 => "First things first, let's give a warm welcome to <b>$name</b>!",
+                41 => "Bonjour <b>$name</b>!",
+                42 => "こんにちは <b>$name</b>!",
+                43 => "你好 <b>$name</b>!",
+                44 => "It's a wonderful day to see <b>$name</b> back!",
+                45 => "Hiya <b>$name</b>!",
+                46 => "Thanks for finding your way back here <b>$name</b>.",
+                47 => "<b>$name</b>, you managed to find your way back here?",
+                48 => "<b>$name</b>, you just came back in time for my funny joke of the day! <i>cricket noises</i>",
+                49 => "I hope your day is going great <b>$name</b>!",
+                50 => "From my computer brain to yours <b>$name</b>, I hope you have a fantastic day!",
+                51 => "Hey <b>$name</b>, is everything going to plan today?",
+                52 => "Hey there <b>$name</b>! My <i>calculations</i> are indicating that you are going to do an awesome job today!",
+                53 => "Long time no see there <b>$name</b>. Or maybe not, I'm not sure. I just say random messages every time you visit here.",
+                54 => "Here <b>$name</b>, did you know that there is a very special message that is rare? Well now you know.",
+                55 => "Welcome back <b>$name</b>, I was running in circles while you were away."
+            };
+
+        }
+
+        /**
+
          * Format the user's phone number
          * @param string $phoneNumber The phone number from the user
          * @return string The user's phone number in the format: "(xxx) xxx-xxxx"
@@ -624,6 +693,7 @@
          */
         function formatPhoneNumber(string $phoneNumber): string {
 
+            $phoneNumber = preg_replace('/\D/', '', $phoneNumber);
             return sprintf("(%s) %s-%s", substr($phoneNumber, 0, 3), substr($phoneNumber, 3, 3), substr($phoneNumber, 6, 9));
 
         }
