@@ -28,7 +28,7 @@
 
             } catch (PDOException $e) {
 
-                die("Could not connect to the database. Please check your configuration. The following error has occured:<br><br>$e");
+                die("Could not connect to the database. Please check your configuration.");
 
             }
         }
