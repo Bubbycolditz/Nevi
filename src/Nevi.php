@@ -402,29 +402,19 @@
             }
         }
 
-        private static function get_user_agent(): mixed {
-
-            return $_SERVER['HTTP_USER_AGENT'];
-
-        }
-
         public static function get_ip(): string|array|bool {
 
-            return getenv('HTTP_CLIENT_IP')
-                ?? getenv('HTTP_X_FORWARDED_FOR')
-                ?? getenv('HTTP_X_FORWARDED')
-                ?? getenv('HTTP_FORWARDED_FOR')
-                ?? getenv('HTTP_FORWARDED')
-                ?? getenv('REMOTE_ADDR')
-                ?? 'UNKNOWN';
+            return getenv('HTTP_CLIENT_IP') ?? getenv('HTTP_X_FORWARDED_FOR') ?? getenv('HTTP_X_FORWARDED') ?? getenv('HTTP_FORWARDED_FOR') ?? getenv('HTTP_FORWARDED') ?? getenv('REMOTE_ADDR') ?? 'UNKNOWN';
 
         }
 
         public static function get_os(): string {
 
-            $user_agent = self::get_user_agent();
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
             $os_platform = "Unknown OS Platform";
+
             $os_array = array(
+                'windows nt 10.0' => 'Windows 11',
                 'windows nt 10' => 'Windows 10',
                 'windows nt 6.3' => 'Windows 8.1',
                 'windows nt 6.2' => 'Windows 8',
@@ -432,7 +422,6 @@
                 'windows nt 6.0' => 'Windows Vista',
                 'windows nt 5.2' => 'Windows Server 2003/XP x64',
                 'windows nt 5.1' => 'Windows XP',
-                'windows xp' => 'Windows XP',
                 'windows nt 5.0' => 'Windows 2000',
                 'windows me' => 'Windows ME',
                 'win98' => 'Windows 98',
@@ -450,9 +439,9 @@
                 'webos' => 'Mobile'
             );
 
-            foreach($os_array as $regex => $value){
-                if(preg_match('/' . $regex . '/i', $user_agent)){
-                    $os_platform = $value; break;
+            foreach($os_array as $keyword => $os) {
+                if(stripos($user_agent, $keyword) !== false) {
+                    $os_platform = $os; break;
                 }
             }
 
@@ -462,25 +451,26 @@
 
         public static function get_browser(): string {
 
-            $user_agent = self::get_user_agent();
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
             $browser = "Unknown Browser";
+
             $browser_array = array(
-                '/msie|trident/i' => 'Internet Explorer',
-                '/firefox/i' => 'Firefox',
-                '/safari/i' => 'Safari',
-                '/chrome/i' => 'Chrome',
-                '/edge/i' => 'Edge',
-                '/opera/i' => 'Opera',
-                '/netscape/i' => 'Netscape',
-                '/maxthon/i' => 'Maxthon',
-                '/konqueror/i' => 'Konqueror',
-                '/ubrowser/i' => 'UC Browser',
-                '/mobile/i' => 'Handheld'
+                'Edge' => '/edge/i',
+                'Chrome' => '/chrome/i',
+                'Firefox' => '/firefox/i',
+                'Safari' => '/safari/i',
+                'Opera' => '/opera/i',
+                'Internet Explorer' => '/msie|trident/i',
+                'Netscape' => '/netscape/i',
+                'Maxthon' => '/maxthon/i',
+                'UC Browser' => '/ubrowser/i',
+                'Konqueror' => '/konqueror/i',
+                'Handheld' => '/mobile/i'
             );
 
-            foreach($browser_array as $regex => $value){
-                if(preg_match($regex, $user_agent)){
-                    $browser = $value; break;
+            foreach($browser_array as $browserName => $regex) {
+                if(preg_match($regex, $user_agent)) {
+                    $browser = $browserName; break;
                 }
             }
 
@@ -503,8 +493,9 @@
                 "success" => "<div class='alert alert-success ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-check fa-fw'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
                 "warning" => "<div class='alert alert-warning ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-exclamation'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
                 "danger" => "<div class='alert alert-danger ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-xmark'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
-                default => "<div class='alert alert-danger ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-xmark'></i> <b class='text-danger'>WARNING:</b> This error message does not have a proper error type! <code>\$errorType = \"$errorType\"</code><br> Please change it!!!! <b>(This message still returned the message \"$message\")</b></p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>"
+                default => "<div class='alert alert-danger ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-xmark'></i> <b class='text-danger'>WARNING:</b> This error message does not have a proper error type! <code>\$errorType = \"$errorType\"</code><br> Please change it!!!! <b>(This message still returned the message <code>\"$message\"</code>)</b></p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>"
             };
+
         }
 
         /**
@@ -547,13 +538,13 @@
             if($time_difference < 1){ return "less than 1 second ago"; }
 
             $condition = array(
-                12 * 30 * 24 * 60 * 60  =>  'year',
-                30 * 24 * 60 * 60       =>  'month',
-                7 * 24 * 60 * 60        =>  'week',
-                24 * 60 * 60            =>  'day',
-                60 * 60                 =>  'hour',
-                60                      =>  'minute',
-                1                       =>  'second'
+                12 * 30 * 24 * 60 * 60 => 'year',
+                30 * 24 * 60 * 60 => 'month',
+                7 * 24 * 60 * 60 => 'week',
+                24 * 60 * 60 => 'day',
+                60 * 60 => 'hour',
+                60 => 'minute',
+                1 => 'second'
             );
 
             foreach($condition as $secs => $str) {
