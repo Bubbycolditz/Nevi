@@ -490,10 +490,10 @@
         public function errorMessage(string $errorType, string $message, bool $dismissible = true): string {
 
             return match ($errorType) {
-                "success" => "<div class='alert alert-success ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-check fa-fw'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
-                "warning" => "<div class='alert alert-warning ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-exclamation'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
-                "danger" => "<div class='alert alert-danger ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-xmark'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
-                default => "<div class='alert alert-danger ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p><i class='far fa-circle-xmark'></i> <b class='text-danger'>WARNING:</b> This error message does not have a proper error type! <code>\$errorType = \"$errorType\"</code><br> Please change it!!!! <b>(This message still returned the message <code>\"$message\"</code>)</b></p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>"
+                "success" => "<div class='alert alert-success ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p class='mb-0'><i class='far fa-circle-check fa-fw'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
+                "warning" => "<div class='alert alert-warning ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p class='mb-0'><i class='far fa-circle-exclamation'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
+                "danger" => "<div class='alert alert-danger ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p class='mb-0'><i class='far fa-circle-xmark'></i> $message</p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>",
+                default => "<div class='alert alert-danger ".($dismissible ? "alert-dismissible" : "")." fade show' role='alert'><p class='mb-0'><i class='far fa-circle-xmark'></i> <b class='text-danger'>WARNING:</b> This error message does not have a proper error type! <code>\$errorType = \"$errorType\"</code><br> Please change it!!!! <b>(This message still returned the message <code>\"$message\"</code>)</b></p>".($dismissible ? "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>" : "")."</div>"
             };
 
         }
@@ -893,7 +893,7 @@
         function formatPhoneNumber(string $phoneNumber): string {
 
             $phoneNumber = preg_replace('/\D/', '', $phoneNumber);
-            return sprintf("(%s) %s-%s", substr($phoneNumber, 0, 3), substr($phoneNumber, 3, 3), substr($phoneNumber, 6, 9));
+            return sprintf("(%s) %s-%s", substr($phoneNumber, 0, 3), substr($phoneNumber, 3, 3), substr($phoneNumber, 6, 4));
 
         }
     }
