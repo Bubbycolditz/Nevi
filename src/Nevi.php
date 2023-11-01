@@ -249,8 +249,6 @@
             }
         }
 
-        
-
         /**
 
          * Grab's the user info
@@ -364,9 +362,9 @@
          * @throws Exception
 
          */
-        public function initiate_password_recovery(string $userID, string $passwordRecoveryEmailLocation): string {
+        public function initiate_password_recovery(string $userID, string $passwordRecoveryEmailLocation) {
 
-            global $mail, $siteNameShort, $siteNameFull, $siteURL;
+            global $mail, $siteNameShort, $siteNameFull, $siteBaseURL, $rootFolder, $log;
 
             $recoveryToken = bin2hex(random_bytes(32));
             $user = $this->get_user_info($userID);
@@ -379,27 +377,16 @@
 
             $this->pdoUpdate("users", ['token'], ["$recoveryToken"], "email = '$userEmail'");
 
-            try {
+            $mail->addAddress($userEmail, $userFullName);
+            $mail->Subject = "Password Recovery - $siteNameShort";
 
-                $mail->addAddress($userEmail, $userFullName);
-                $mail->Subject = "Password Recovery - $siteNameShort";
+            ob_start();
+            require "$passwordRecoveryEmailLocation";
+            $mail->Body = ob_get_contents();
+            ob_end_clean();
 
-                ob_start();
-                require "$passwordRecoveryEmailLocation";
-                $mail->Body = ob_get_contents();
-                ob_end_clean();
+            return $mail->send();
 
-                $mail->send();
-
-                $this->logAction("settings", "email", "succeeded", "Send Password Reset Email: \"$user[firstName] $user[lastName]\"");
-                return $this->errorMessage("warning", "A password recovery link has been sent!");
-
-            } catch (Exception $e) {
-
-                $this->logAction("settings", "email", "failed", "Couldn't send Password Reset Email: \"$user[firstName] $user[lastName]\" --> [$e]");
-                return $this->errorMessage("danger", "This message could not be sent for some reason. Here is the exact error: <b>$mail->ErrorInfo</b>");
-
-            }
         }
 
         public static function get_ip(): string|array|bool {
