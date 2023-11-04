@@ -353,45 +353,15 @@
             return $totalEvents;
         }
 
-        /**
-
-         * Start a password recovery by the user
-         * @param string $userID The ID of the user.
-         * @param string $passwordRecoveryEmailLocation The email file location for password recovery.
-         * @return string
-         * @throws Exception
-
-         */
-        public function initiate_password_recovery(string $userID, string $passwordRecoveryEmailLocation) {
-
-            global $mail, $siteNameShort, $siteNameFull, $siteBaseURL, $rootFolder, $log;
-
-            $recoveryToken = bin2hex(random_bytes(32));
-            $user = $this->get_user_info($userID);
-
-            $userEmail = $user['email'];
-            $userFirstName = $user['firstName'];
-            $userLastName = $user['lastName'];
-
-            $userFullName = "$userFirstName $userLastName";
-
-            $this->pdoUpdate("users", ['token'], ["$recoveryToken"], "email = '$userEmail'");
-
-            $mail->addAddress($userEmail, $userFullName);
-            $mail->Subject = "Password Recovery - $siteNameShort";
-
-            ob_start();
-            require "$passwordRecoveryEmailLocation";
-            $mail->Body = ob_get_contents();
-            ob_end_clean();
-
-            return $mail->send();
-
-        }
-
         public static function get_ip(): string|array|bool {
 
             return getenv('HTTP_CLIENT_IP') ?? getenv('HTTP_X_FORWARDED_FOR') ?? getenv('HTTP_X_FORWARDED') ?? getenv('HTTP_FORWARDED_FOR') ?? getenv('HTTP_FORWARDED') ?? getenv('REMOTE_ADDR') ?? 'UNKNOWN';
+
+        }
+
+        public static function get_agent(): string {
+
+            return  $_SERVER['HTTP_USER_AGENT'];
 
         }
 
